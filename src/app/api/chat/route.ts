@@ -4,6 +4,17 @@ import { ChatRequest } from '@/lib/types';
 
 export async function POST(request: NextRequest) {
   try {
+    // Validasi token akses
+    const authHeader = request.headers.get("Authorization");
+    const token = authHeader?.split(" ")[1];
+
+    if (token !== process.env.APP_ACCESS_TOKEN) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     const body: ChatRequest = await request.json();
     const { message, cacheId: clientCacheId, history } = body;
 

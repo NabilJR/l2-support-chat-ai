@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🤖 L2 Support Chat AI
 
-## Getting Started
+Aplikasi chat berbasis **AI** untuk membantu tim **L2 Technical Support** menjawab pertanyaan pengguna secara otomatis. Dibangun dengan **Next.js 14+** (App Router), **TypeScript**, **Tailwind CSS**, dan **Google Gemini AI** dengan dukungan **context caching** serta **enkripsi knowledge base** untuk keamanan data.
+Author : NJR
+Supported By L1 Multipurpose Team
 
-First, run the development server:
+---
+
+## ✨ Fitur Utama
+
+- **💬 Chat Interaktif** – Antarmuka chat yang responsif dengan dark mode, animasi fade-in, dan streaming respons real-time.
+- **🧠 Knowledge Base Internal** – AI hanya menjawab berdasarkan knowledge base yang disediakan (format Markdown).
+- **⚡ Context Caching** – Knowledge base dikirim sekali ke Gemini dan di-cache, menghemat token hingga 90% pada percakapan berikutnya.
+- **🔐 Enkripsi Knowledge Base** – File knowledge base dienkripsi (AES-256-CBC) sebelum di-commit ke repository publik.
+- **📱 Responsif** – Tampilan optimal di desktop maupun mobile.
+- **⏱️ Thinking Time** – Menampilkan waktu yang dibutuhkan AI untuk berpikir.
+- **📜 Riwayat Percakapan** – AI mengingat konteks percakapan sebelumnya (multi-turn chat).
+- **🛡️ Keamanan** – Mendukung proteksi akses via Vercel Deployment Protection atau HTTP Basic Auth.
+
+---
+
+## 🛠️ Tech Stack
+
+| Teknologi | Keterangan |
+|-----------|------------|
+| **Next.js 14+** | Framework React dengan App Router |
+| **TypeScript** | Pengetikan statis untuk kualitas kode |
+| **Tailwind CSS** | Utility-first CSS framework |
+| **Google Gemini AI** | Model bahasa untuk menjawab pertanyaan (Gemini 2.5 Flash) |
+| **Context Caching** | Fitur Gemini untuk menghemat token input |
+| **SSE (Server-Sent Events)** | Streaming respons AI secara real-time |
+| **AES-256-CBC** | Enkripsi knowledge base |
+| **Vercel** | Platform deployment (opsional) |
+
+---
+
+## 📋 Prasyarat
+
+- **Node.js** versi 18 atau lebih baru
+- **NPM** atau **Yarn**
+- **Google AI Studio API Key** (dapat di [Google AI Studio](https://aistudio.google.com/))
+- **Git** (untuk version control)
+
+---
+
+## 🚀 Instalasi & Setup Lokal
+
+1. Clone Repository
 
 ```bash
+git clone https://github.com/username-anda/l2-support-chat.git
+cd l2-support-chat
+
+2. Install Dependencies
+npm install
+
+3. buat file .env kemudian isi :
+GOOGLE_API_KEY=AIzaSy...  # Gemini API key Anda
+ENCRYPTION_KEY=0e7a...     # 64 karakter hex (32 byte) untuk enkripsi knowledge base
+
+4. jalankan perintah ini pada terminal untuk mendapatkan ENCRYPTION_KEY
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
+5. siapkan knowledge base berupa file .md yang disimpan dalam folder knowldege-base, ex :
+    # FAQ 
+    ## DASHBOARD 
+    ### pembuatan akun baru 
+    1. Masuk ke WEB
+    2. pilih cabang yang akan di tambahkan user
+    3. masuk menu Maintenance -> User
+    4. tambahkan user pada menu tersebut
+
+6. run command dibawah untuk membuat file knowledge terenkripsi
+npm run encrypt
+
+7. jalankan aplikasi
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

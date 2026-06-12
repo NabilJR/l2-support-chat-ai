@@ -53,8 +53,21 @@ export function useChat() {
           }),
         });
 
+        if (response.status === 401) {
+          sessionStorage.removeItem("appAccessToken");
+          throw new Error("Token akses tidak valid. Silakan login ulang.");
+        }
+
         if (!response.ok) {
-          throw new Error("Gagal mengirim pesan.");
+          let errorMessage = "Gagal mengirim pesan.";
+          let errorBody: { error?: string } | null = null;
+          try {
+            errorBody = await response.json();
+          } catch {
+            errorBody = null;
+          }
+          if (errorBody?.error) errorMessage = errorBody.error;
+          throw new Error(errorMessage);
         }
 
         // Ambil cacheId terbaru dari header

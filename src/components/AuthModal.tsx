@@ -3,20 +3,32 @@
 import { useState, FormEvent } from 'react';
 
 interface AuthModalProps {
-  onAuthenticate: (token: string) => void;
+  onAuthenticate: (token: string) => Promise<void>;
 }
 
 export default function AuthModal({ onAuthenticate }: AuthModalProps) {
   const [token, setToken] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (token.trim()) {
-      onAuthenticate(token);
-      setError(null);
-    } else {
+
+    const trimmedToken = token.trim();
+    if (!trimmedToken) {
       setError('Token tidak boleh kosong.');
+      return;
+    }
+
+    setIsAuthenticating(true);
+    setError(null);
+
+    try {
+      await onAuthenticate(trimmedToken);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Token akses tidak valid.');
+    } finally {
+      setIsAuthenticating(false);
     }
   };
 
@@ -36,9 +48,10 @@ export default function AuthModal({ onAuthenticate }: AuthModalProps) {
           {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded-md font-semibold hover:bg-blue-700 transition-colors"
+            disabled={isAuthenticating}
+            className="w-full bg-blue-600 text-white p-3 rounded-md font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Masuk
+            {isAuthenticating ? 'Memeriksa...' : 'Masuk'}
           </button>
         </form>
       </div>

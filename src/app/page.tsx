@@ -10,16 +10,40 @@ export default function Home() {
 
   useEffect(() => {
     const storedToken = sessionStorage.getItem("appAccessToken");
-    // Gunakan fungsi setTimeout untuk menunda pemanggilan setIsAuthenticated
-    // Ini membantu menghindari peringatan ESLint tentang panggilan setState sinkron dalam useEffect
-    if (typeof window !== "undefined" && storedToken) {
-      setTimeout(() => {
-        setIsAuthenticated(true);
-      }, 0);
-    }
-  }, []); // Dependensi kosong agar hanya berjalan sekali saat mount
+    if (typeof window === "undefined" || !storedToken) return;
 
-  const handleAuthenticate = (token: string) => {
+    fetch("/api/auth", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: storedToken }),
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          sessionStorage.removeItem("appAccessToken");
+          setIsAuthenticated(false);
+          return;
+        }
+
+        setIsAuthenticated(true);
+      })
+      .catch(() => {
+        sessionStorage.removeItem("appAccessToken");
+        setIsAuthenticated(false);
+      });
+  }, []);
+
+  const handleAuthenticate = async (token: string) => {
+    const response = await fetch("/api/auth", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.error || "Token akses tidak valid.");
+    }
+
     sessionStorage.setItem("appAccessToken", token);
     setIsAuthenticated(true);
   };

@@ -55,11 +55,10 @@ cd l2-support-chat
 npm install
 
 3. buat file .env kemudian isi :
-GOOGLE_API_KEY=AIzaSy...  # Gemini API key Anda
-ENCRYPTION_KEY=0e7a...     # 64 karakter hex (32 byte) untuk enkripsi knowledge base
+GOOGLE_API_KEY=......  # Gemini API key Anda
+ENCRYPTION_KEY=......     # 64 karakter hex (32 byte) untuk enkripsi knowledge base
 
 4. jalankan perintah ini pada terminal untuk mendapatkan ENCRYPTION_KEY
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 5. siapkan knowledge base berupa file .md yang disimpan dalam folder knowldege-base, ex :
     # FAQ 

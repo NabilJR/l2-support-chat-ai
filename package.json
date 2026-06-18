@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "encrypt": "tsx scripts/encrypt-knowledge.ts",
+    "encrypt": "tsx scripts/encrypt_knowledge.ts",
     "update-kb": "npm run encrypt && git add src/data/knowledge-encrypted.ts && git commit -m \"Update knowledge base\" && git push"
   },
   "dependencies": {
